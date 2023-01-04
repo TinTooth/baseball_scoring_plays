@@ -7,6 +7,7 @@ class Plays:
         self.players = players
         self.teams = self.get_team_ids(player_teams)
         self.games = self.get_games()
+        self.plays = self.get_plays()
 
     def get_games (self):
         games = []
@@ -43,3 +44,17 @@ class Plays:
                     if player in play['result']['description']:
                         results.append(play['result']['description'])
         return results
+
+    def refresh(self):
+        self.plays = self.get_plays()
+        return self.plays_to_string()
+
+    def plays_to_string(self):
+        return '\n\n'.join(self.plays)
+
+    def filter_by_player(self,player):
+        result = []
+        for play in self.plays:
+            if player in play:
+                result.append(play)
+        return '\n\n'.join(result)

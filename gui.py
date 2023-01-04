@@ -4,22 +4,30 @@ import PySimpleGUI as sg
 
 
 plays = Plays(['Bryan Reynolds','Aaron Judge'], ['Pirates'])
-scoring_plays = plays.get_plays()
-
 button_row = [[sg.Button(player) for player in plays.players]]
+
+
+
 
 layout = [
     [button_row],
-    [sg.Listbox(values =scoring_plays, size=(50,None), key = 'Plays')],
-    [sg.Button('Refresh')]]
+    [sg.Multiline(default_text=plays.plays_to_string(), size = (50,50), disabled=True, enable_events=True, key = 'Plays')],
+    [sg.Button('Refresh'), sg.Button('All Players')]]
 window = sg.Window("Scoring Plays",layout,margins=(100,100))
+multiline = window['Plays'].widget
+
+
 while True: 
     event,values = window.read()
     if event == sg.WIN_CLOSED:
         break
-    if event == 'Refresh':
-        window['Plays'].update(plays.get_plays())
+    elif event == 'All Players':
+        window['Plays'].update(plays.plays_to_string())
+    elif event == 'Refresh':
+        window['Plays'].update(plays.refresh())
+    else :
+        window['Plays'].update(plays.filter_by_player(event))
+        
 
-# sg.Window(title="Scoring Plays",layout = [[sg.Text('Scoring Plays')],[sg.Button('Refresh')]], margins =(200,100)).read()
 
 window.close()
